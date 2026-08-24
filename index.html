@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Happy Birthday! ✨🎂🎁</title>
+  <style>
+    :root {
+      --bg-dark: #0a0207;
+      --card-bg: rgba(22, 7, 17, 0.85);
+      --primary-glow: #ff0055;
+      --pink-neon: #ff2a8d;
+      --accent-gold: #ffd700;
+      --accent-cyan: #00f0ff;
+      --text-main: #ffffff;
+      --text-sub: #d0a8be;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+      min-height: 100vh;
+      background: radial-gradient(circle at 50% 30%, #2a081a 0%, #0e020a 60%, var(--bg-dark) 100%);
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-main);
+      position: relative;
+    }
+
+    /* Ambient Glowing Background Orbs */
+    .glow-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+      animation: floatGlow 10s ease-in-out infinite alternate;
+    }
+    .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--primary-glow); }
+    .orb-2 { bottom: -10%; right: -10%; width: 55vw; height: 55vw; background: #8a00ff; animation-delay: -5s; }
+    .orb-3 { top: 40%; right: 20%; width: 30vw; height: 30vw; background: var(--pink-neon); opacity: 0.3; }
+
+    @keyframes floatGlow {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(40px, 30px) scale(1.15); }
+    }
+
+    /* Particle Canvas */
+    #particleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    /* Satin Ribbons Layer */
+    .ribbon-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .satin-ribbon {
+      position: absolute;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6));
+    }
+
+    .ribbon-tl {
+      top: -30px; left: -30px; width: 320px;
+      animation: ribbonSway1 7s ease-in-out infinite alternate;
+    }
+
+    .ribbon-tr {
+      top: -30px; right: -30px; width: 320px; transform: scaleX(-1);
+      animation: ribbonSway2 8s ease-in-out infinite alternate;
+    }
+
+    .streamer-left {
+      top: 0; left: 8%; width: 90px; height: 100vh;
+      animation: streamerWave 9s ease-in-out infinite alternate;
+    }
+
+    .streamer-right {
+      top: 0; right: 8%; width: 90px; height: 100vh;
+      animation: streamerWave 10s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes ribbonSway1 { 0% { transform: rotate(0deg) scale(1); } 100% { transform: rotate(5deg) scale(1.05); } }
+    @keyframes ribbonSway2 { 0% { transform: scaleX(-1) rotate(0deg); } 100% { transform: scaleX(-1) rotate(5deg); } }
+    @keyframes streamerWave { 0% { transform: skewX(-4deg) translateX(-15px); } 100% { transform: skewX(4deg) translateX(15px); } }
+
+    /* Floating Balloons Layer */
+    .balloon-layer {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .balloon {
+      position: absolute;
+      bottom: -160px;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+      animation: floatUp 14s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.9; }
+      90% { opacity: 0.9; }
+      100% { transform: translateY(-125vh) rotate(20deg); opacity: 0; }
+    }
+
+    /* Main Squircle Glass Card */
+    .main-card {
+      position: relative;
+      z-index: 10;
+      width: 90%;
+      max-width: 460px;
+      padding: 2.8rem 2rem;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 36px;
+      border: 1.5px solid rgba(255, 60, 140, 0.25);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8),
+                  0 0 40px rgba(255, 0, 85, 0.25),
+                  inset 0 0 20px rgba(255, 255, 255, 0.05);
+      text-align: center;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .title-glow {
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 20%, #ff80ab 60%, var(--pink-neon) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(255, 42, 141, 0.6);
+      letter-spacing: -0.5px;
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-sub);
+      margin-bottom: 1.8rem;
+    }
+
+    /* Tap Tracker Hearts */
+    .heart-tracker {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .heart-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 42, 141, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .heart-dot svg {
+      width: 12px;
+      height: 12px;
+      fill: transparent;
+      transition: fill 0.4s ease, transform 0.4s ease;
+    }
+
+    .heart-dot.active {
+      background: var(--pink-neon);
+      border-color: #ff80ab;
+      box-shadow: 0 0 15px var(--pink-neon);
+      transform: scale(1.25);
+    }
+
+    .heart-dot.active svg {
+      fill: #ffffff;
+      transform: scale(1.1);
+    }
+
+    /* Object Stage Area */
+    .stage-area {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .stage-glow {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,42,141,0.4) 0%, transparent 70%);
+      filter: blur(20px);
+      animation: pulseGlow 3s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(0.9); opacity: 0.5; }
+      100% { transform: scale(1.2); opacity: 0.9; }
+    }
+
+    /* Cake Object */
+    .cake-box {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
+    }
+
+    .cake-box:hover { transform: scale(1.06) rotate(2deg); }
+    .cake-box:active { transform: scale(0.95) rotate(-3deg); }
+
+    .flame-anim {
+      animation: flameFlicker 0.4s infinite alternate ease-in-out;
+      transform-origin: center bottom;
+    }
+
+    @keyframes flameFlicker {
+      0% { transform: scale(1) rotate(-3deg); opacity: 0.85; }
+      100% { transform: scale(1.2) rotate(4deg); opacity: 1; filter: drop-shadow(0 0 10px #ffea00); }
+    }
+
+    /* Present Object */
+    .present-box {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.5) rotate(-15deg);
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .present-box.show {
+      opacity: 1;
+      pointer-events: all;
+      transform: scale(1) rotate(0deg);
+      animation: giftBounce 2.5s infinite alternate ease-in-out;
+    }
+
+    @keyframes giftBounce {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-10px) scale(1.04); }
+    }
+
+    /* Mascot Cat Badge */
+    .cute-mascot {
+      position: absolute;
+      top: -28px;
+      right: 20px;
+      width: 55px;
+      height: 55px;
+      background: #1a0814;
+      border: 2px solid var(--pink-neon);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px var(--pink-neon);
+      animation: mascotBob 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes mascotBob {
+      0% { transform: translateY(0) rotate(-5deg); }
+      100% { transform: translateY(-8px) rotate(8deg); }
+    }
+
+    /* Download Window (Modal Popup) */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(5, 1, 6, 0.85);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-card {
+      width: 240px;
+      height: 240px;
+      background: rgba(28, 8, 22, 0.95);
+      border: 2px solid var(--pink-neon);
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 60px rgba(255, 42, 141, 0.5),
+                  0 20px 50px rgba(0, 0, 0, 0.9);
+      transform: scale(0.6);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .modal-backdrop.active .modal-card {
+      transform: scale(1);
+    }
+
+    /* Pure Circular Button (NO TEXT) */
+    .circle-download-btn {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00e676 0%, #00b0ff 100%);
+      color: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      box-shadow: 0 0 30px rgba(0, 230, 118, 0.6),
+                  inset 0 2px 4px rgba(255, 255, 255, 0.6);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: pulseCircleBtn 2s infinite alternate;
+    }
+
+    .circle-download-btn:hover {
+      transform: scale(1.12);
+      box-shadow: 0 0 45px rgba(0, 230, 118, 0.9);
+    }
+
+    .circle-download-btn:active {
+      transform: scale(0.92);
+    }
+
+    .circle-download-btn svg {
+      width: 42px;
+      height: 42px;
+      fill: #ffffff;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    @keyframes pulseCircleBtn {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.06); box-shadow: 0 0 40px rgba(0, 176, 255, 0.8); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Glowing Orbs -->
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+  <div class="glow-orb orb-3"></div>
+
+  <!-- Interactive Particles Canvas -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Dark Satin Ribbons Layer -->
+  <div class="ribbon-layer">
+    <svg class="satin-ribbon ribbon-tl" viewBox="0 0 320 220">
+      <defs>
+        <linearGradient id="satinDarkRed" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ff0055" />
+          <stop offset="40%" stop-color="#990033" />
+          <stop offset="80%" stop-color="#4a0018" />
+          <stop offset="100%" stop-color="#ff1744" />
+        </linearGradient>
+        <linearGradient id="satinDarkGold" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ffe57f" />
+          <stop offset="50%" stop-color="#ffb300" />
+          <stop offset="100%" stop-color="#ff6f00" />
+        </linearGradient>
+      </defs>
+      <path d="M0,0 C120,70 200,30 320,140 C250,150 160,90 0,70 Z" fill="url(#satinDarkRed)" />
+      <path d="M0,45 C140,100 210,60 330,180 C270,185 180,120 0,100 Z" fill="url(#satinDarkGold)" opacity="0.8" />
+    </svg>
+
+    <svg class="satin-ribbon ribbon-tr" viewBox="0 0 320 220">
+      <path d="M0,0 C120,70 200,30 320,140 C250,150 160,90 0,70 Z" fill="url(#satinDarkRed)" />
+      <path d="M0,45 C140,100 210,60 330,180 C270,185 180,120 0,100 Z" fill="url(#satinDarkGold)" opacity="0.8" />
+    </svg>
+
+    <svg class="satin-ribbon streamer-left" viewBox="0 0 100 800" preserveAspectRatio="none">
+      <path d="M30,0 Q80,200 20,400 T30,800 L65,800 Q15,600 75,400 T65,0 Z" fill="url(#satinDarkRed)" opacity="0.7" />
+    </svg>
+    <svg class="satin-ribbon streamer-right" viewBox="0 0 100 800" preserveAspectRatio="none">
+      <path d="M40,0 Q10,200 70,400 T40,800 L75,800 Q105,600 45,400 T75,0 Z" fill="url(#satinDarkGold)" opacity="0.7" />
+    </svg>
+  </div>
+
+  <!-- Floating Glowing Balloons Container -->
+  <div class="balloon-layer" id="balloonContainer"></div>
+
+  <!-- Main Dark Glass Card Stage -->
+  <div class="main-card">
+    <div class="cute-mascot">
+      <svg width="34" height="34" viewBox="0 0 100 100">
+        <polygon points="18,38 32,10 46,30" fill="#ff2a8d" />
+        <polygon points="82,38 68,10 54,30" fill="#ff2a8d" />
+        <polygon points="23,34 32,16 41,28" fill="#ffa0c8" />
+        <polygon points="77,34 68,16 59,28" fill="#ffa0c8" />
+        <circle cx="50" cy="52" r="34" fill="#ffffff" />
+        <ellipse cx="38" cy="48" rx="4.5" ry="6" fill="#1a0814" />
+        <ellipse cx="62" cy="48" rx="4.5" ry="6" fill="#1a0814" />
+        <circle cx="39.5" cy="46" r="1.8" fill="#ffffff" />
+        <circle cx="63.5" cy="46" r="1.8" fill="#ffffff" />
+        <ellipse cx="31" cy="56" rx="5" ry="3" fill="#ff80ab" />
+        <ellipse cx="69" cy="56" rx="5" ry="3" fill="#ff80ab" />
+        <polygon points="47,54 53,54 50,57" fill="#ff2a8d" />
+        <path d="M 45 60 Q 50 64 50 60 Q 50 64 55 60" fill="none" stroke="#1a0814" stroke-width="2.5" stroke-linecap="round" />
+      </svg>
+    </div>
+
+    <h1 class="title-glow">Happy Birthday!</h1>
+    <p class="subtitle" id="statusText">Tap the cake 3 times for a magical surprise! ✨</p>
+
+    <!-- Tap Tracker Hearts -->
+    <div class="heart-tracker">
+      <div class="heart-dot" id="dot1">
+        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </div>
+      <div class="heart-dot" id="dot2">
+        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </div>
+      <div class="heart-dot" id="dot3">
+        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </div>
+    </div>
+
+    <!-- Object Stage -->
+    <div class="stage-area">
+      <div class="stage-glow"></div>
+
+      <!-- State 1: Cake -->
+      <div class="cake-box" id="cakeObj" onclick="onCakeClick(event)">
+        <svg viewBox="0 0 200 200" width="100%" height="100%">
+          <defs>
+            <linearGradient id="cakeBaseGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#3d0c24" />
+              <stop offset="100%" stop-color="#18030e" />
+            </linearGradient>
+            <linearGradient id="neonFrosting" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#ff0055" />
+              <stop offset="50%" stop-color="#ff2a8d" />
+              <stop offset="100%" stop-color="#ff7700" />
+            </linearGradient>
+            <filter id="neonGlowFilter" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+
+          <ellipse cx="100" cy="172" rx="75" ry="12" fill="#12040c" stroke="#ff2a8d" stroke-width="2" filter="url(#neonGlowFilter)"/>
+          <rect x="35" y="115" width="130" height="50" rx="14" fill="url(#cakeBaseGrad)" stroke="#ff2a8d" stroke-width="1.5"/>
+          <path d="M35 125 C 45 140, 55 110, 65 130 C 75 145, 85 115, 98 132 C 110 145, 122 115, 135 130 C 148 142, 155 115, 165 125 L 165 115 L 35 115 Z" fill="url(#neonFrosting)"/>
+
+          <rect x="55" y="70" width="90" height="48" rx="12" fill="url(#cakeBaseGrad)" stroke="#ff80ab" stroke-width="1.5"/>
+          <path d="M55 80 C 65 92, 75 75, 85 90 C 95 98, 105 78, 118 90 C 128 98, 138 78, 145 80 L 145 70 L 55 70 Z" fill="url(#neonFrosting)"/>
+
+          <circle cx="80" cy="98" r="3.5" fill="#ffffff"/>
+          <circle cx="120" cy="98" r="3.5" fill="#ffffff"/>
+          <path d="M 94 102 Q 100 107 106 102" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+          <ellipse cx="73" cy="102" rx="4" ry="2.5" fill="#ff0055"/>
+          <ellipse cx="127" cy="102" rx="4" ry="2.5" fill="#ff0055"/>
+
+          <rect x="94" y="42" width="12" height="30" rx="3" fill="#00f0ff" filter="url(#neonGlowFilter)"/>
+          <path d="M94 48 L106 52 M94 58 L106 62" stroke="#ffffff" stroke-width="2"/>
+
+          <g class="flame-anim">
+            <path d="M100 20 C92 31 95 42 100 42 C105 42 108 31 100 20 Z" fill="#ff7700" filter="url(#neonGlowFilter)"/>
+            <path d="M100 26 C96 32 98 38 100 38 C102 38 104 32 100 26 Z" fill="#ffea00"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- State 2: Present (Revealed after 3 clicks) -->
+      <div class="present-box" id="presentObj" onclick="onPresentClick(event)">
+        <svg viewBox="0 0 200 200" width="100%" height="100%">
+          <defs>
+            <linearGradient id="boxGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ff0055"/>
+              <stop offset="100%" stop-color="#800033"/>
+            </linearGradient>
+            <linearGradient id="ribbonGoldGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#fff176"/>
+              <stop offset="50%" stop-color="#ffd700"/>
+              <stop offset="100%" stop-color="#ffab00"/>
+            </linearGradient>
+          </defs>
+
+          <rect x="40" y="80" width="120" height="90" rx="18" fill="url(#boxGrad)" stroke="#ff2a8d" stroke-width="2" filter="url(#neonGlowFilter)"/>
+          <rect x="88" y="80" width="24" height="90" fill="url(#ribbonGoldGrad)"/>
+
+          <rect x="32" y="62" width="136" height="28" rx="10" fill="#990033" stroke="#ffd700" stroke-width="2"/>
+          <rect x="88" y="62" width="24" height="28" fill="url(#ribbonGoldGrad)"/>
+
+          <path d="M100 62 C 75 30, 45 60, 90 62 C 45 65, 75 95, 100 62 Z" fill="url(#ribbonGoldGrad)" filter="url(#neonGlowFilter)"/>
+          <path d="M100 62 C 125 30, 155 60, 110 62 C 155 65, 125 95, 100 62 Z" fill="url(#ribbonGoldGrad)" filter="url(#neonGlowFilter)"/>
+          <circle cx="100" cy="62" r="9" fill="#ffffff"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Download Window Modal (Pure Circle Button Only) -->
+  <div class="modal-backdrop" id="downloadModal">
+    <div class="modal-card">
+      <a href="https://github.com/Md33g/Sana-Pixels/releases/download/Sana/com.md.sanapixels_1.0.2.apk" class="circle-download-btn" download>
+        <svg viewBox="0 0 24 24">
+          <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    /* ===================================================
+       CANVAS PARTICLE SYSTEM
+    =================================================== */
+    let clickCount = 0;
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor(x, y, color, speedScale = 1) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.size = Math.random() * 8 + 4;
+        this.vx = (Math.random() - 0.5) * 12 * speedScale;
+        this.vy = (Math.random() - 0.5) * 12 * speedScale - 2;
+        this.life = 1;
+        this.decay = Math.random() * 0.02 + 0.015;
+        this.shape = Math.random() > 0.5 ? 'circle' : 'star';
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += 0.15;
+        this.life -= this.decay;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.life);
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 10;
+
+        if (this.shape === 'circle') {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.translate(this.x, this.y);
+          ctx.beginPath();
+          for (let i = 0; i < 5; i++) {
+            ctx.lineTo(Math.cos((18 + i * 72) * Math.PI / 180) * this.size, -Math.sin((18 + i * 72) * Math.PI / 180) * this.size);
+            ctx.lineTo(Math.cos((54 + i * 72) * Math.PI / 180) * (this.size/2), -Math.sin((54 + i * 72) * Math.PI / 180) * (this.size/2));
+          }
+          ctx.closePath();
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+    }
+
+    function createParticleBurst(x, y, count = 30, speedScale = 1) {
+      const colors = ['#ff0055', '#ff2a8d', '#ffd700', '#00f0ff', '#ff7700', '#00e676', '#ffffff'];
+      for (let i = 0; i < count; i++) {
+        particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], speedScale));
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw();
+        if (particles[i].life <= 0) particles.splice(i, 1);
+      }
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    /* ===================================================
+       BALLOON GENERATOR
+    =================================================== */
+    const balloonColors = ['#ff0055', '#ff7700', '#ffd700', '#00f0ff', '#ff2a8d', '#7a00ff'];
+    const balloonContainer = document.getElementById('balloonContainer');
+
+    for (let i = 0; i < 14; i++) {
+      const balloon = document.createElement('div');
+      balloon.className = 'balloon';
+      const color = balloonColors[i % balloonColors.length];
+      const scale = 0.65 + Math.random() * 0.5;
+
+      balloon.style.left = `${Math.random() * 92}%`;
+      balloon.style.animationDuration = `${9 + Math.random() * 9}s`;
+      balloon.style.animationDelay = `${Math.random() * 7}s`;
+
+      balloon.innerHTML = `
+        <svg width="${75 * scale}" height="${130 * scale}" viewBox="0 0 75 130">
+          <defs>
+            <radialGradient id="balloonGrad${i}" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"/>
+              <stop offset="40%" stop-color="${color}"/>
+              <stop offset="100%" stop-color="#0a0207"/>
+            </radialGradient>
+          </defs>
+          <ellipse cx="37" cy="42" rx="32" ry="40" fill="url(#balloonGrad${i})"/>
+          <polygon points="37,82 31,90 43,90" fill="${color}"/>
+          <path d="M37 90 Q 50 105 25 115 T 37 130" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+        </svg>
+      `;
+      balloonContainer.appendChild(balloon);
+    }
+
+    /* ===================================================
+       AUTOMATIC & NON-STOPPABLE BIRTHDAY SONG SYNTHESIZER
+    =================================================== */
+    let audioCtx = null;
+    let isLooping = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      if (!isLooping) {
+        isLooping = true;
+        playInfiniteSong();
+      }
+    }
+
+    // Attach listeners to trigger autoplay on load or immediate first tap
+    ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
+      window.addEventListener(evt, initAudio, { once: false });
+    });
+    window.addEventListener('load', () => { setTimeout(initAudio, 300); });
+
+    function playInfiniteSong() {
+      if (!audioCtx) return;
+
+      const masterGain = audioCtx.createGain();
+      masterGain.gain.setValueAtTime(0.85, audioCtx.currentTime);
+      masterGain.connect(audioCtx.destination);
+
+      const songNotes = [
+        { f: 261.63, d: 0.35 }, { f: 261.63, d: 0.15 }, { f: 293.66, d: 0.5 }, { f: 261.63, d: 0.5 }, { f: 349.23, d: 0.5 }, { f: 329.63, d: 0.9 },
+        { f: 261.63, d: 0.35 }, { f: 261.63, d: 0.15 }, { f: 293.66, d: 0.5 }, { f: 261.63, d: 0.5 }, { f: 392.00, d: 0.5 }, { f: 349.23, d: 0.9 },
+        { f: 261.63, d: 0.35 }, { f: 261.63, d: 0.15 }, { f: 523.25, d: 0.5 }, { f: 440.00, d: 0.5 }, { f: 349.23, d: 0.5 }, { f: 329.63, d: 0.5 }, { f: 293.66, d: 0.8 },
+        { f: 466.16, d: 0.35 }, { f: 466.16, d: 0.15 }, { f: 440.00, d: 0.5 }, { f: 349.23, d: 0.5 }, { f: 392.00, d: 0.5 }, { f: 349.23, d: 1.1 }
+      ];
+
+      let now = audioCtx.currentTime + 0.1;
+
+      songNotes.forEach((note) => {
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const noteGain = audioCtx.createGain();
+
+        osc1.type = 'sawtooth';
+        osc2.type = 'square';
+
+        osc1.frequency.setValueAtTime(note.f, now);
+        osc2.frequency.setValueAtTime(note.f * 1.003, now);
+
+        noteGain.gain.setValueAtTime(0.5, now);
+        noteGain.gain.exponentialRampToValueAtTime(0.001, now + note.d - 0.04);
+
+        osc1.connect(noteGain);
+        osc2.connect(noteGain);
+        noteGain.connect(masterGain);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + note.d);
+        osc2.stop(now + note.d);
+
+        now += note.d + 0.04;
+      });
+
+      // Loop back seamlessly when melody ends
+      const duration = (now - audioCtx.currentTime) * 1000;
+      setTimeout(() => {
+        if (isLooping) playInfiniteSong();
+      }, duration);
+    }
+
+    function playTapSound(pitchMultiplier = 1) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440 * pitchMultiplier, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880 * pitchMultiplier, audioCtx.currentTime + 0.15);
+
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.15);
+    }
+
+    function playFanfareSound() {
+      if (!audioCtx) return;
+      [523.25, 659.25, 783.99, 1046.50].forEach(freq => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.8);
+      });
+    }
+
+    /* ===================================================
+       INTERACTION LOGIC (DIRECT CAKE -> PRESENT -> MODAL)
+    =================================================== */
+    function onCakeClick(e) {
+      if (clickCount >= 3) return;
+
+      clickCount++;
+      playTapSound(1 + clickCount * 0.25);
+
+      const rect = e.currentTarget.getBoundingClientRect();
+      createParticleBurst(e.clientX || (rect.left + rect.width / 2), e.clientY || (rect.top + rect.height / 2), 30);
+
+      document.getElementById(`dot${clickCount}`).classList.add('active');
+
+      if (clickCount < 3) {
+        document.getElementById('statusText').innerText = `Tap again! (${clickCount}/3) ✨`;
+      } else {
+        // Reveal Present Directly
+        document.getElementById('statusText').innerText = "Click your present! 🎁✨";
+        
+        const cakeObj = document.getElementById('cakeObj');
+        const presentObj = document.getElementById('presentObj');
+
+        cakeObj.style.opacity = '0';
+        cakeObj.style.pointerEvents = 'none';
+
+        setTimeout(() => {
+          cakeObj.style.display = 'none';
+          presentObj.classList.add('show');
+          createParticleBurst(window.innerWidth / 2, window.innerHeight / 2, 70, 1.8);
+        }, 400);
+      }
+    }
+
+    function onPresentClick(e) {
+      playFanfareSound();
+
+      const rect = e.currentTarget.getBoundingClientRect();
+      createParticleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 80, 2);
+
+      const presentObj = document.getElementById('presentObj');
+      presentObj.style.transform = 'scale(1.2) translateY(-20px)';
+      presentObj.style.opacity = '0';
+
+      setTimeout(() => {
+        document.getElementById('downloadModal').classList.add('active');
+      }, 400);
+    }
+  </script>
+</body>
+</html>
